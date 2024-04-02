@@ -102,7 +102,7 @@ if [ "${PACKAGES_ALREADY_INSTALLED}" != "true" ]; then
         libkrb5-3 \
         libgssapi-krb5-2 \
         libicu[0-9][0-9] \
-        liblttng-ust0 \
+        liblttng-ust1 \
         libstdc++6 \
         zlib1g \
         locales \
@@ -114,24 +114,8 @@ if [ "${PACKAGES_ALREADY_INSTALLED}" != "true" ]; then
         manpages-dev \
         init-system-helpers"
         
-    # Needed for adding manpages-posix and manpages-posix-dev which are non-free packages in Debian
-    if [ "${ADD_NON_FREE_PACKAGES}" = "true" ]; then
-        # Bring in variables from /etc/os-release like VERSION_CODENAME
-        . /etc/os-release
-        sed -i -E "s/deb http:\/\/(deb|httpredir)\.debian\.org\/debian ${VERSION_CODENAME} main/deb http:\/\/\1\.debian\.org\/debian ${VERSION_CODENAME} main contrib non-free/" /etc/apt/sources.list
-        sed -i -E "s/deb-src http:\/\/(deb|httredir)\.debian\.org\/debian ${VERSION_CODENAME} main/deb http:\/\/\1\.debian\.org\/debian ${VERSION_CODENAME} main contrib non-free/" /etc/apt/sources.list
-        sed -i -E "s/deb http:\/\/(deb|httpredir)\.debian\.org\/debian ${VERSION_CODENAME}-updates main/deb http:\/\/\1\.debian\.org\/debian ${VERSION_CODENAME}-updates main contrib non-free/" /etc/apt/sources.list
-        sed -i -E "s/deb-src http:\/\/(deb|httpredir)\.debian\.org\/debian ${VERSION_CODENAME}-updates main/deb http:\/\/\1\.debian\.org\/debian ${VERSION_CODENAME}-updates main contrib non-free/" /etc/apt/sources.list
-        sed -i "s/deb http:\/\/security\.debian\.org\/debian-security ${VERSION_CODENAME}\/updates main/deb http:\/\/security\.debian\.org\/debian-security ${VERSION_CODENAME}\/updates main contrib non-free/" /etc/apt/sources.list
-        sed -i "s/deb-src http:\/\/security\.debian\.org\/debian-security ${VERSION_CODENAME}\/updates main/deb http:\/\/security\.debian\.org\/debian-security ${VERSION_CODENAME}\/updates main contrib non-free/" /etc/apt/sources.list
-        sed -i "s/deb http:\/\/deb\.debian\.org\/debian ${VERSION_CODENAME}-backports main/deb http:\/\/deb\.debian\.org\/debian ${VERSION_CODENAME}-backports main contrib non-free/" /etc/apt/sources.list 
-        sed -i "s/deb-src http:\/\/deb\.debian\.org\/debian ${VERSION_CODENAME}-backports main/deb http:\/\/deb\.debian\.org\/debian ${VERSION_CODENAME}-backports main contrib non-free/" /etc/apt/sources.list
-        echo "Running apt-get update..."
-        apt-get update
-        package_list="${package_list} manpages-posix manpages-posix-dev"
-    else
-        apt_get_update_if_needed
-    fi
+
+    apt_get_update_if_needed
 
     # Install libssl1.1 if available
     if [[ ! -z $(apt-cache --names-only search ^libssl1.1$) ]]; then

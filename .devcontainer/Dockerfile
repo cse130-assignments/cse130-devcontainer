@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim AS haskell-env
+FROM debian:bookworm-slim AS haskell-env
 
 ENV LANG C.UTF-8
 
