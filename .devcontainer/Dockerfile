@@ -26,6 +26,7 @@ RUN apt-get update \
         libnuma-dev \
         libtinfo-dev \
         zlib1g-dev \
+        build-essential \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Install latest GHCup in the non-root user home
@@ -54,6 +55,9 @@ RUN stack install --resolver=lts-21.25 haskell-dap ghci-dap haskell-debug-adapte
 # Install Elsa in separate container, so that no artifacts remain
 FROM haskell-env AS elsa-build
 WORKDIR workdir
+USER root
+RUN chown $USERNAME:$USERNAME /workdir
+USER $USERNAME
 RUN git clone https://github.com/ucsd-progsys/elsa.git elsa-repo
 RUN cd elsa-repo && stack install --local-bin-path /workdir
 
